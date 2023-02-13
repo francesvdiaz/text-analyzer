@@ -1,5 +1,3 @@
-// Utility Logic
-
 function isEmpty(testString) {
   return (testString.trim().length === 0);
 }
@@ -35,9 +33,21 @@ function numberOfOccurrencesInText(word, text) {
 }
 
 
-function noBadWords() {
+function omitOffensiveWords(text) {
+  const offensiveWords = ["zoinks","muppeteer","beefaroni","loopdiloop"];
+  const nonOffensiveWord = "*****";
+  let words = text.split(" ");
   
+  words.forEach(function(word, index) {
+    if (offensiveWords.includes(word.toLowerCase())) {
+      words[index] = nonOffensiveWord;
+    }
+  }); 
+
+    return words.join(" ");
 }
+
+
 
 
 // UI Logic
@@ -67,11 +77,14 @@ function handleFormSubmission(event) {
   event.preventDefault();
   const passage = document.getElementById("text-passage").value;
   const word = document.getElementById("word").value;
-  const wordCount = wordCounter(passage);
-  const occurrencesOfWord = numberOfOccurrencesInText(word, passage);
+  const offensiveWords = ["zoinks","muppeteer","beefaroni","loopdiloop"];
+  const cleanPassage = omitOffensiveWords(passage, offensiveWords);
+  const wordCount = wordCounter(cleanPassage);
+  const occurrencesOfWord = numberOfOccurrencesInText(word, cleanPassage);
   document.getElementById("total-count").innerText = wordCount;
   document.getElementById("selected-count").innerText = occurrencesOfWord;
-  let boldedPassage = boldPassage(word, passage);
+
+  let boldedPassage = boldPassage(word, cleanPassage);
   if (boldedPassage) {
     document.querySelector("div#bolded-passage").append(boldedPassage);
   } else {
